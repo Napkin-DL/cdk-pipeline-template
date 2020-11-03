@@ -3,6 +3,7 @@ from aws_cdk import aws_codepipeline as codepipeline
 from aws_cdk import aws_codepipeline_actions as cpactions
 from aws_cdk import pipelines
 
+from .app_stage import AppStage
 
 class CdkPipelineStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, pipeline_config: dict, **kwargs):
@@ -11,7 +12,7 @@ class CdkPipelineStack(core.Stack):
         source_artifact = codepipeline.Artifact()
         cloud_assembly_artifact = codepipeline.Artifact()
 
-        pipelines.CdkPipeline(self, 'CdkPipeline', 
+        pipeline = pipelines.CdkPipeline(self, 'CdkPipeline', 
             cloud_assembly_artifact=cloud_assembly_artifact,
             pipeline_name=pipeline_config['pipeline_name'],            
             source_action=cpactions.GitHubSourceAction(
@@ -31,3 +32,8 @@ class CdkPipelineStack(core.Stack):
                 synth_command='cdk synth'
             )
         )
+
+        pipeline.add_application_stage(AppStage(self, 'Prod', env={
+            'account': pipeline_config['stage_account'],
+            'region': pipeline_config['stage_region']
+        }))

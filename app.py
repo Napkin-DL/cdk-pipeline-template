@@ -19,8 +19,9 @@ pipeline(app, config['app']['stack_name'],
         'github_oauth_token': config['pipeline']['github_oauth_token'],
         'github_owner': config['pipeline']['github_owner'],
         'github_repo': config['pipeline']['github_repo'],
-        'github_branch': config['pipeline']['github_branch']
-    }
-    )
+        'github_branch': config['pipeline']['github_branch'],
+        'stage_account': config['app']['account'],
+        'stage_region': config['app']['region']
+    })
 
 app.synth()
